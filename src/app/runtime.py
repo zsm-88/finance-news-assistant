@@ -173,15 +173,14 @@ async def run_cycle(session: AsyncSession, redis, settings: Settings) -> int:
     events = EventRepository(session)
 
     for news in news_items:
-        event = await events.get(news.event_id)
-        if event is None:
-            continue
         try:
+            event = await events.get(news.event_id)
+            if event is None:
+                continue
             await pipeline.analyze(event, news, prompt)
             if settings.enable_push:
                 await notifier.process(event, preference, "wecom", settings.push_destination)
         except Exception:
-            await session.rollback()
             logger.exception("news processing failed", extra={"news_id": str(news.id), "event_id": str(news.event_id)})
     return len(news_items)
 
