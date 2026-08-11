@@ -1,0 +1,13 @@
+<view class="state-panel {{compact ? 'compact' : ''}}">
+  <view wx:if="{{status === 'loading'}}" class="skeleton-stack">
+    <view class="skeleton-line short"></view>
+    <view class="skeleton-line"></view>
+    <view class="skeleton-line medium"></view>
+  </view>
+  <block wx:else>
+    <view class="state-symbol">{{status === 'error' ? '!' : '—'}}</view>
+    <text class="state-title">{{title}}</text>
+    <text wx:if="{{description}}" class="state-description">{{description}}</text>
+    <button wx:if="{{actionText}}" class="retry-button" bindtap="onRetry">{{actionText}}</button>
+  </block>
+</view>

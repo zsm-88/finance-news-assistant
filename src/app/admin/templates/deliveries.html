@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}推送日志 · AI财经助手{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>推送日志</h2>
+  <p>{{ total }} 条记录</p>
+</div>
+
+<div class="filter-bar">
+  <form action="/admin/deliveries" method="get" style="display: flex; gap: 12px; align-items: center;">
+    <input type="hidden" name="page" value="1">
+    <input type="hidden" name="page_size" value="{{ page_size }}">
+    <select name="status">
+      <option value="">全部状态</option>
+      <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>待发送</option>
+      <option value="sent" {% if status_filter == 'sent' %}selected{% endif %}>已发送</option>
+      <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>失败</option>
+      <option value="dead_letter" {% if status_filter == 'dead_letter' %}selected{% endif %}>死信</option>
+    </select>
+    <button type="submit">筛选</button>
+    <a href="/admin/deliveries" class="btn btn-outline">清除</a>
+  </form>
+</div>
+
+<div class="card scroll-x">
+  {% if items %}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>渠道</th>
+        <th>目标</th>
+        <th>状态</th>
+        <th>尝试</th>
+        <th>错误</th>
+        <th>消息ID</th>
+        <th>请求时间</th>
+        <th>发送时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td><span class="tag tag-pending">{{ item.channel }}</span></td>
+        <td style="font-size: 12px;">{{ item.destination }}</td>
+        <td>
+          {% if item.status == 'sent' %}<span class="tag tag-success">已发送</span>
+          {% elif item.status == 'failed' %}<span class="tag tag-fail">失败</span>
+          {% elif item.status == 'dead_letter' %}<span class="tag tag-fail">死信</span>
+          {% elif item.status == 'pending' %}<span class="tag tag-pending">待发送</span>
+          {% else %}<span class="tag tag-warning">{{ item.status }}</span>{% endif %}
+        </td>
+        <td class="cell-numeric">{{ item.attempts }}</td>
+        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; color: var(--rise); font-size: 12px;">{{ item.last_error[:60] if item.last_error else '--' }}</td>
+        <td style="font-size: 12px; color: var(--text-tertiary);">{{ item.provider_message_id[:20] if item.provider_message_id else '--' }}</td>
+        <td class="time-text">{{ item.created_at.strftime('%m-%d %H:%M') }}</td>
+        <td class="time-text">{{ item.sent_at.strftime('%m-%d %H:%M') if item.sent_at else '--' }}</td>
+        <td>
+          {% if item.status in ('failed', 'dead_letter') %}
+          <form action="/admin/deliveries/{{ item.id }}/retry" method="post" style="display: inline;">
+            <button type="submit" class="btn-link">重试</button>
+          </form>
+          {% else %}
+          <span style="color: var(--text-tertiary); font-size: 12px;">--</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">📨</div><p>暂无推送记录</p></div>
+  {% endif %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="/admin/deliveries?page={{ page - 1 }}&page_size={{ page_size }}&status={{ status_filter or '' }}">‹ 上一页</a>
+  {% endif %}
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}
+    <span class="current">{{ p }}</span>
+    {% elif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+    <a href="/admin/deliveries?page={{ p }}&page_size={{ page_size }}&status={{ status_filter or '' }}">{{ p }}</a>
+    {% elif p == page - 3 or p == page + 3 %}
+    <span>...</span>
+    {% endif %}
+  {% endfor %}
+  {% if page < total_pages %}
+  <a href="/admin/deliveries?page={{ page + 1 }}&page_size={{ page_size }}&status={{ status_filter or '' }}">下一页 ›</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

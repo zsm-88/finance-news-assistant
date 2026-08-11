@@ -1,0 +1,26 @@
+<view class="page-shell news-page page-enter">
+  <view class="page-header">
+    <text class="news-eyebrow">FINANCE FEED</text>
+    <text class="page-title">财经新闻</text>
+    <text class="page-subtitle">聚合重要中文财经资讯</text>
+  </view>
+  <scroll-view scroll-x class="category-scroll">
+    <view class="category-tabs">
+      <button wx:for="{{categories}}" wx:key="key" data-key="{{item.key}}" class="category-tab {{selectedCategory === item.key ? 'active' : ''}}" bindtap="selectCategory">{{item.label}}</button>
+    </view>
+  </scroll-view>
+  <state-panel wx:if="{{status === 'loading'}}" status="loading" />
+  <state-panel wx:elif="{{status === 'error'}}" status="error" title="数据加载失败" description="请检查网络后重试" action-text="重新加载" bind:retry="retry" />
+  <state-panel wx:elif="{{status === 'empty'}}" status="empty" title="暂时没有新闻" description="当前分类暂无内容，稍后刷新试试" />
+  <view wx:else class="news-list divider-list">
+    <view wx:for="{{items}}" wx:key="id" class="news-item {{item.isImportant ? 'important-news' : ''}} {{index === 0 ? 'lead-news' : ''}}" data-id="{{item.id}}" bindtap="openNews">
+      <view class="news-heading-row">
+        <text wx:if="{{item.isImportant}}" class="important-label">重点</text>
+        <text class="news-title">{{item.title}}</text>
+      </view>
+      <text wx:if="{{item.summary}}" class="news-summary">{{item.summary}}</text>
+      <view class="news-meta-row"><text>{{item.source}} · {{item.publishedRelativeText}}</text><text>{{item.categoryText}}</text></view>
+    </view>
+    <view class="list-footer"><text wx:if="{{loadingMore}}">正在加载更多</text><text wx:elif="{{!hasMore}}">已显示全部新闻</text></view>
+  </view>
+</view>

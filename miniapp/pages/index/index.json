@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "AI财经助手",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "state-panel": "/components/state-panel/state-panel",
+    "mini-trend": "/components/mini-trend/mini-trend"
+  }
+}

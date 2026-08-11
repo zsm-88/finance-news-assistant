@@ -1,0 +1,46 @@
+{
+  "name": "ai-finance-assistant",
+  "services": [
+    {
+      "name": "api",
+      "source": {
+        "repo": "your-github-username/your-repo-name",
+        "branch": "main"
+      },
+      "buildCommand": "pip install --no-cache-dir .",
+      "startCommand": "uvicorn app.main:app --host 0.0.0.0 --port $PORT",
+      "healthcheckPath": "/health",
+      "domains": []
+    },
+    {
+      "name": "worker",
+      "source": {
+        "repo": "your-github-username/your-repo-name",
+        "branch": "main"
+      },
+      "buildCommand": "pip install --no-cache-dir .",
+      "startCommand": "python -m app.worker",
+      "healthcheckPath": "/health",
+      "domains": []
+    },
+    {
+      "name": "migrate",
+      "source": {
+        "repo": "your-github-username/your-repo-name",
+        "branch": "main"
+      },
+      "buildCommand": "pip install --no-cache-dir .",
+      "startCommand": "alembic upgrade head"
+    }
+  ],
+  "plugins": [
+    {
+      "name": "PostgreSQL",
+      "version": "16"
+    },
+    {
+      "name": "Redis",
+      "version": "7"
+    }
+  ]
+}

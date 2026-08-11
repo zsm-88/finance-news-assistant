@@ -1,0 +1,21 @@
+.news-page { padding-top: 18rpx; }
+.news-eyebrow { display: block; margin-bottom: 8rpx; color: var(--color-brand); font-size: 18rpx; font-weight: 700; }
+.category-scroll { width: calc(100% + 56rpx); margin: 0 -28rpx 24rpx; white-space: nowrap; }
+.category-tabs { display: inline-flex; gap: 12rpx; padding: 0 28rpx; }
+.category-tab { min-width: 104rpx; margin: 0; padding: 0 22rpx; border: 1rpx solid var(--color-line); border-radius: var(--radius-control); background: #081321; color: var(--color-text-secondary); font-size: 24rpx; line-height: 58rpx; }
+.category-tab::after { border: 0; }
+.category-tab.active { border-color: #1c6076; background: var(--color-brand-soft); color: var(--color-brand); font-weight: 650; }
+.news-list { margin: 0 -28rpx; }
+.news-item { position: relative; padding: 26rpx 32rpx; border-bottom: 1rpx solid var(--color-line); background: var(--color-surface); }
+.lead-news { padding-top: 34rpx; padding-bottom: 34rpx; border-top: 3rpx solid var(--color-rise); background: var(--color-surface-raised); }
+.lead-news .news-title { font-size: 35rpx; font-weight: 720; line-height: 1.45; }
+.lead-news .news-summary { -webkit-line-clamp: 3; }
+.news-item:last-of-type { border-bottom: 0; }
+.important-news::before { position: absolute; top: 30rpx; bottom: 30rpx; left: 0; width: 4rpx; background: var(--color-rise); content: ''; }
+.news-heading-row { display: flex; align-items: flex-start; gap: 12rpx; }
+.important-label { flex-shrink: 0; margin-top: 4rpx; color: var(--color-rise); font-size: 21rpx; font-weight: 700; }
+.news-title { min-width: 0; overflow-wrap: anywhere; font-size: 31rpx; font-weight: 650; line-height: 1.48; }
+.news-summary { display: -webkit-box; overflow: hidden; margin-top: 14rpx; color: var(--color-text-secondary); font-size: 25rpx; line-height: 1.6; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.news-meta-row { display: flex; margin-top: 16rpx; align-items: center; justify-content: space-between; gap: 16rpx; color: var(--color-text-tertiary); font-size: 22rpx; }
+.news-meta-row text:last-child { flex-shrink: 0; }
+.list-footer { padding: 28rpx; color: var(--color-text-tertiary); font-size: 22rpx; text-align: center; }

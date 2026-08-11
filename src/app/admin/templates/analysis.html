@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}AI 审核队列 · AI财经助手{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>AI 审核队列</h2>
+  <p>{{ count }} 条待审核</p>
+</div>
+
+<div class="card scroll-x">
+  {% if items %}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Event ID</th>
+        <th>原因</th>
+        <th>原始响应</th>
+        <th>时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td style="font-size: 12px; color: var(--text-tertiary); font-family: monospace;">{{ item.event_id }}</td>
+        <td style="max-width: 400px; overflow: hidden; text-overflow: ellipsis;">{{ item.reason[:120] }}{% if item.reason|length > 120 %}...{% endif %}</td>
+        <td style="font-size: 11px; color: var(--text-tertiary); max-width: 200px; overflow: hidden; text-overflow: ellipsis;">{{ item.raw_response | tojson | truncate(60) }}</td>
+        <td class="time-text">{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">✅</div>
+    <p>审核队列为空，所有 AI 分析均通过验证</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

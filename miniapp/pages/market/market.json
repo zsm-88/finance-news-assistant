@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "市场行情",
+  "enablePullDownRefresh": true,
+  "usingComponents": { "state-panel": "/components/state-panel/state-panel" }
+}

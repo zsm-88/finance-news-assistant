@@ -1,0 +1,46 @@
+<view class="fund-detail-page page-enter">
+  <state-panel wx:if="{{status === 'loading'}}" status="loading" />
+  <state-panel wx:elif="{{status === 'error'}}" status="error" title="基金加载失败" description="请检查网络后重试" action-text="重新加载" bind:retry="retry" />
+  <block wx:else>
+    <view class="fund-hero">
+      <view class="fund-title-row"><view class="fund-title"><text class="fund-name">{{fund.name}}</text><text class="fund-code">{{fund.code}} · {{fund.fund_type || '类型暂无数据'}}</text></view><button class="favorite-button secondary-button" bindtap="toggleFavorite">{{fund.is_favorite ? '★ 已自选' : '☆ 加入自选'}}</button></view>
+      <text class="company-text">{{fund.management_company || '基金公司暂无数据'}}</text>
+      <view class="valuation-grid">
+        <view class="official-panel"><text class="valuation-label">{{fund.officialLabelText}}</text><text class="valuation-number">{{fund.navText}}</text><text class="valuation-meta">{{fund.officialStaleText || '净值日期'}} · {{fund.navDateText}}</text><text class="valuation-source">{{fund.officialSourceText}}</text></view>
+        <view class="estimate-panel"><text class="valuation-label">盘中估算</text><text class="valuation-number">{{fund.estimateDisplayText}}</text><text class="valuation-meta {{fund.estimateReliable ? fund.estimateChangeClass : 'flat'}}">{{fund.estimateChangeDisplayText}}</text><text class="valuation-source">{{fund.estimateReliable ? fund.estimateSourceTimeText : fund.marketStatusText}}</text></view>
+      </view>
+      <view class="estimate-disclosure"><text class="detail-market-tag">{{fund.marketStatusText}}</text><text wx:if="{{fund.estimateStaleText}}" class="warning-text">{{fund.estimateStaleText}}</text><text wx:if="{{!fund.estimateReliable}}">暂无可靠估值，不计算估算持仓</text></view>
+      <view class="hero-actions"><text>盘中估值为实验性数据，不是实时净值</text><button class="text-button" loading="{{refreshing}}" bindtap="manualRefresh">刷新数据</button></view>
+    </view>
+
+    <view class="detail-band history-band">
+      <view class="section-head"><view><text class="section-title">历史净值</text><text class="band-caption">仅包含正式净值，不含盘中估算</text></view></view>
+      <view class="nav-range-row"><button wx:for="{{navRangeOptions}}" wx:key="value" data-value="{{item.value}}" class="range-option {{navRange === item.value ? 'active' : ''}}" bindtap="selectNavRange">{{item.label}}</button></view>
+      <state-panel wx:if="{{navHistoryStatus === 'loading'}}" compact status="loading" />
+      <view wx:elif="{{navHistoryStatus === 'success'}}" class="nav-chart"><finance-chart mode="nav" points="{{navHistory.items}}" /><view class="history-meta"><text>来源 {{navHistory.source}}</text><text>截至 {{navHistory.asOfText}}</text></view></view>
+      <state-panel wx:else compact status="{{navHistoryStatus}}" title="{{navHistory && navHistory.stateText ? navHistory.stateText : '暂无历史净值'}}" description="{{navHistoryStatus === 'unauthorized' ? '当前账户暂未开通该数据权限' : navHistoryStatus === 'error' ? '请稍后重试' : ''}}" action-text="{{navHistoryStatus === 'error' ? '重新加载' : ''}}" bind:retry="retryNavHistory" />
+    </view>
+
+    <view class="detail-band position-band">
+      <view class="section-head"><text class="section-title">我的持仓</text></view>
+      <view wx:if="{{fund.position}}" class="position-overview">
+        <view><text>持有份额</text><text>{{fund.position.sharesText}}</text></view><view><text>平均成本</text><text>{{fund.position.averageCostText}}</text></view><view><text>净值市值</text><text>¥{{fund.position.officialMarketValueText}}</text></view><view><text>净值收益</text><text class="{{fund.position.officialProfitClass}}">{{fund.position.officialProfitText}}</text></view>
+      </view>
+      <view wx:if="{{fund.position}}" class="estimate-position">
+        <text class="estimate-position-title">按盘中估值估算</text>
+        <view wx:if="{{fund.position.estimateReliable}}" class="estimate-position-values"><text>市值 ¥{{fund.position.estimatedMarketValueText}}</text><text class="{{fund.position.estimatedProfitClass}}">收益 {{fund.position.estimatedProfitText}}</text><text class="{{fund.position.estimatedProfitClass}}">{{fund.position.estimatedProfitRateText}}</text></view>
+        <text wx:else class="warning-text">暂无可靠估值</text>
+      </view>
+      <view class="position-editor"><label><text>持有份额</text><input type="digit" value="{{sharesInput}}" bindinput="onSharesInput" placeholder="请输入份额" /></label><label><text>平均成本</text><input type="digit" value="{{averageCostInput}}" bindinput="onCostInput" placeholder="请输入成本" /></label><button class="primary-button save-button" loading="{{saving}}" bindtap="savePosition">保存持仓</button></view>
+      <button wx:if="{{fund.position}}" class="delete-position text-button" bindtap="removePosition">删除持仓记录</button>
+      <text class="calculation-note">估算值仅供参考；估值缺失或过期时不计算估算市值和收益。</text>
+    </view>
+
+    <view class="detail-band holdings-band">
+      <view class="section-head"><text class="section-title">季度重仓</text><text class="report-date">报告期 {{fund.holdingsReportDateText}}</text></view>
+      <state-panel wx:if="{{!fund.holdings.length}}" compact status="empty" title="暂无重仓股数据" />
+      <view wx:else class="holding-list"><view class="holding-columns"><text>股票</text><text>当日涨跌</text><text>持仓占比</text></view><view wx:for="{{fund.holdings}}" wx:key="symbol" class="holding-row"><view><text class="holding-name">{{item.name || item.symbol}}</text><text wx:if="{{item.name}}" class="holding-code">{{item.symbol}}</text></view><view class="holding-metrics"><text class="holding-change {{item.changeClass}}">{{item.changeText}}</text><text class="holding-weight">{{item.weightText}}</text></view></view></view>
+      <text class="holding-note"><block wx:if="{{fund.holdings_source}}">数据来源 {{fund.holdings_source}}；</block>重仓数据来自基金定期报告，不代表当前实时持仓。</text>
+    </view>
+  </block>
+</view>

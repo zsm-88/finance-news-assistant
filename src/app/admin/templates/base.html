@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}AI财经助手 · 管理后台{% endblock %}</title>
+  <style>
+    :root {
+      --brand: #30c7e8;
+      --brand-soft: #102a3b;
+      --rise: #ff626b;
+      --fall: #2dd4a0;
+      --neutral: #8a97aa;
+      --text: #edf3fb;
+      --text-secondary: #a7b3c5;
+      --text-tertiary: #738198;
+      --bg: #07111f;
+      --surface: #0b1728;
+      --surface-raised: #101d30;
+      --line: #203047;
+      --warning: #e9b75b;
+      --warning-bg: #2a2418;
+      --radius: 6px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Layout */
+    .app-shell { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      padding: 24px 0;
+    }
+    .sidebar-brand {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 16px;
+    }
+    .sidebar-brand h1 {
+      font-size: 18px;
+      color: var(--brand);
+      font-weight: 700;
+    }
+    .sidebar-brand small {
+      display: block;
+      margin-top: 4px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+    }
+    .nav-list { list-style: none; }
+    .nav-list li a {
+      display: block;
+      padding: 10px 20px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .nav-list li a:hover,
+    .nav-list li a.active {
+      color: var(--text);
+      background: var(--brand-soft);
+      border-left-color: var(--brand);
+      text-decoration: none;
+    }
+    .nav-list li a .badge {
+      float: right;
+      background: var(--rise);
+      color: #fff;
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-weight: 650;
+    }
+
+    .main-area {
+      flex: 1;
+      padding: 28px 32px;
+      max-width: calc(100vw - 220px);
+    }
+    .page-header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .page-header h2 { font-size: 22px; font-weight: 700; }
+    .page-header p { color: var(--text-tertiary); font-size: 13px; margin-top: 4px; }
+
+    /* Cards & Stats */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .stat-card .stat-label { color: var(--text-tertiary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .stat-value { font-size: 28px; font-weight: 750; margin-top: 6px; font-variant-numeric: tabular-nums; }
+    .stat-card .stat-value.rise { color: var(--rise); }
+    .stat-card .stat-value.fall { color: var(--fall); }
+    .stat-card .stat-value.neutral { color: var(--neutral); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-head h3 { font-size: 15px; font-weight: 650; }
+    .card-body { padding: 18px; }
+
+    /* Tables */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+    .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .data-table tr:hover td { background: var(--surface-raised); }
+    .data-table .cell-numeric { font-variant-numeric: tabular-nums; text-align: right; }
+
+    /* Status tags */
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tag-success { background: #14382a; color: var(--fall); }
+    .tag-fail { background: #381c1c; color: var(--rise); }
+    .tag-pending { background: #1e2a38; color: var(--brand); }
+    .tag-warning { background: var(--warning-bg); color: var(--warning); }
+    .tag-delayed { background: #2a2818; color: #d69e2e; }
+
+    /* Pagination */
+    .pagination { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+    .pagination a, .pagination span {
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 13px;
+    }
+    .pagination a:hover { background: var(--surface-raised); text-decoration: none; }
+    .pagination .current { background: var(--brand-soft); color: var(--brand); border-color: var(--brand); }
+
+    /* Filters */
+    .filter-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-bar select, .filter-bar input {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+    .filter-bar button, .btn {
+      background: var(--brand);
+      color: #041019;
+      border: 0;
+      border-radius: var(--radius);
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text-secondary);
+    }
+    .btn-outline:hover { background: var(--surface-raised); }
+    .btn-danger { background: var(--rise); color: #fff; }
+    .btn-link {
+      background: transparent;
+      border: none;
+      color: var(--brand);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 0;
+    }
+    .btn-link:hover { text-decoration: underline; }
+
+    /* Detail sections */
+    .detail-section { margin-bottom: 24px; }
+    .detail-section h4 { font-size: 14px; font-weight: 650; margin-bottom: 10px; color: var(--brand); }
+    .detail-field { margin-bottom: 8px; }
+    .detail-field .label { color: var(--text-tertiary); font-size: 12px; display: block; }
+    .detail-field .value { font-size: 14px; margin-top: 2px; }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-tertiary); }
+    .empty-state .empty-icon { font-size: 36px; margin-bottom: 12px; }
+
+    .stars { color: var(--warning); letter-spacing: 2px; }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .status-dot.green { background: var(--fall); }
+    .status-dot.yellow { background: var(--warning); }
+    .status-dot.red { background: var(--rise); }
+
+    .time-text { color: var(--text-tertiary); font-size: 12px; }
+
+    .scroll-x { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <h1>AI财经助手</h1>
+        <small>管理后台 v0.1</small>
+      </div>
+      <ul class="nav-list">
+        <li><a href="/admin/" class="{% if request.url.path == '/admin/' %}active{% endif %}">📊 大盘</a></li>
+        <li><a href="/admin/news" class="{% if request.url.path.startswith('/admin/news') %}active{% endif %}">📰 新闻</a></li>
+        <li><a href="/admin/events" class="{% if request.url.path == '/admin/events' %}active{% endif %}">🔔 事件</a></li>
+        <li><a href="/admin/deliveries" class="{% if request.url.path == '/admin/deliveries' %}active{% endif %}">📨 推送日志</a></li>
+        <li><a href="/admin/analysis-queue" class="{% if request.url.path == '/admin/analysis-queue' %}active{% endif %}">🤖 AI 审核队列</a></li>
+        <li><a href="/admin/config" class="{% if request.url.path == '/admin/config' %}active{% endif %}">⚙️ 配置</a></li>
+      </ul>
+    </nav>
+    <main class="main-area">
+      {% block content %}{% endblock %}
+      <footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--text-tertiary); font-size: 12px; text-align: center;">
+        AI Finance WeChat Assistant · {{ now().strftime('%Y-%m-%d %H:%M:%S') if now is defined else '' }}
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

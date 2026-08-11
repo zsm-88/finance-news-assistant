@@ -1,0 +1,87 @@
+<view class="page-shell dashboard page-enter">
+  <view class="page-header dashboard-head">
+    <view class="brand-lockup"><view class="brand-mark">F</view><view class="brand-copy"><text class="terminal-eyebrow">FINANCE TERMINAL</text><text class="page-title">财经助手</text></view></view>
+    <view class="date-block"><text>今日</text><text>{{dateText}}</text></view>
+  </view>
+
+  <state-panel wx:if="{{status === 'loading'}}" status="loading" />
+  <state-panel wx:elif="{{status === 'error'}}" status="error" title="数据加载失败" description="请检查网络后重试" action-text="重新加载" bind:retry="retry" />
+
+  <block wx:else>
+    <view wx:if="{{newsSourceStatus}}" class="notice-bar source-status">{{newsSourceStatus}}</view>
+
+    <view class="section-block market-overview">
+      <view class="section-head">
+        <text class="section-title">市场概览</text>
+        <navigator url="/pages/market/market" open-type="switchTab" class="section-link">全部行情 ›</navigator>
+      </view>
+      <view wx:if="{{primaryMarket}}" class="market-terminal surface">
+        <view class="primary-market" data-symbol="{{primaryMarket.symbol}}" bindtap="openMarket">
+          <view class="primary-copy"><view class="market-name-row"><text class="market-name primary-name">{{primaryMarket.name}}</text><text class="market-status-tag">{{primaryMarket.marketStatusShortText}}</text></view><view class="primary-price-line"><text class="price-label">{{primaryMarket.priceLabel}}</text><text class="primary-price {{primaryMarket.changeClass}}">{{primaryMarket.priceText}}</text></view><view class="primary-change {{primaryMarket.changeClass}}"><text>{{primaryMarket.changeText}}</text><text>{{primaryMarket.changePercentText}}</text></view><text class="market-state">{{primaryMarket.dataTimeLabel}} {{primaryMarket.timestampText}}</text></view>
+          <view wx:if="{{trend}}" class="primary-trend"><mini-trend points="{{trend.items}}" direction="{{trend.direction}}" /></view>
+        </view>
+        <view class="secondary-market-grid">
+          <view wx:for="{{secondaryMarkets}}" wx:key="symbol" class="secondary-market" data-symbol="{{item.symbol}}" bindtap="openMarket"><view class="secondary-name-row"><text class="market-name">{{item.name}}</text><text class="secondary-status">{{item.marketStatusShortText}}</text></view><text class="secondary-price {{item.changeClass}}">{{item.priceText}}</text><view class="secondary-bottom"><text class="market-percent {{item.changeClass}}">{{item.available ? item.changePercentText : '暂无数据'}}</text><text wx:if="{{item.available}}" class="secondary-time">{{item.timestampText}}</text></view></view>
+        </view>
+      </view>
+      <state-panel wx:else compact status="empty" title="暂无行情数据" description="行情恢复后将在这里显示" />
+    </view>
+
+    <view class="section-block news-section">
+      <view class="section-head">
+        <text class="section-title">重要财经</text>
+        <navigator url="/pages/news/news" open-type="switchTab" class="section-link">更多 ›</navigator>
+      </view>
+      <view wx:if="{{featuredNews}}" class="featured-news" data-id="{{featuredNews.id}}" bindtap="openNews">
+        <view class="featured-accent"></view>
+        <text class="featured-kicker">重点关注 · {{featuredNews.importanceText}}</text>
+        <text class="featured-title">{{featuredNews.title}}</text>
+        <text wx:if="{{featuredNews.summary}}" class="featured-summary">{{featuredNews.summary}}</text>
+        <text class="news-meta">{{featuredNews.source}} · {{featuredNews.publishedRelativeText}}</text>
+      </view>
+      <view wx:if="{{newsItems.length}}" class="compact-news divider-list">
+        <view wx:for="{{newsItems}}" wx:key="id" class="compact-news-row" data-id="{{item.id}}" bindtap="openNews">
+          <text class="compact-news-title">{{item.title}}</text>
+          <text class="news-meta">{{item.source}} · {{item.publishedRelativeText}}</text>
+        </view>
+      </view>
+      <state-panel wx:if="{{!featuredNews}}" compact status="empty" title="暂时没有新闻" description="稍后刷新试试" />
+    </view>
+
+    <view class="section-block fund-section">
+      <view class="section-head">
+        <text class="section-title">我的基金</text>
+        <navigator url="/pages/fund/fund" open-type="switchTab" class="section-link">全部 ›</navigator>
+      </view>
+      <view wx:if="{{fundItems.length}}" class="home-funds divider-list">
+        <view wx:for="{{fundItems}}" wx:key="code" class="home-fund-row" data-code="{{item.code}}" bindtap="openFund">
+          <view class="home-fund-identity">
+            <text class="home-fund-name">{{item.name}}</text>
+            <text class="meta-text">{{item.officialLabelText}} {{item.navText}} · 最近净值 {{item.navDateCompactText}}</text>
+          </view>
+          <view class="home-fund-value">
+            <block wx:if="{{item.preferredProfit}}"><text class="meta-text">{{item.preferredProfit.label}}</text><text class="{{item.preferredProfit.className}}">{{item.preferredProfit.text}} · {{item.preferredProfit.rate}}</text></block>
+            <block wx:else><text class="meta-text">盘中估算</text><text class="{{item.estimateChangeClass}}">{{item.estimateReliable ? item.estimateChangeText : '休市'}}</text></block>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="fund-empty surface">
+        <text>还没有添加自选基金</text>
+        <navigator url="/pages/fund/fund" open-type="switchTab" class="section-link">去添加基金</navigator>
+      </view>
+    </view>
+
+    <view class="section-block trend-section">
+      <view class="section-head">
+        <view><text class="section-title">市场趋势</text><text class="trend-caption">上证指数 · 近1月</text></view>
+        <text class="status-pill">收盘数据</text>
+      </view>
+      <view wx:if="{{trend}}" class="trend-chart surface" data-symbol="sh000001" bindtap="openMarket">
+        <mini-trend points="{{trend.items}}" direction="{{trend.direction}}" />
+      </view>
+      <state-panel wx:else compact status="empty" title="暂无趋势数据" />
+    </view>
+
+    <view class="dashboard-updated">数据更新 {{generatedAt}}</view>
+  </block>
+</view>

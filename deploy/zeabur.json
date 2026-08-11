@@ -1,0 +1,46 @@
+{
+  "name": "ai-finance-assistant",
+  "services": [
+    {
+      "name": "api",
+      "plan": "free",
+      "build": {
+        "dockerfilePath": "../Dockerfile"
+      },
+      "env": {
+        "APP_ENV": "production",
+        "LOG_LEVEL": "INFO",
+        "ENABLE_CRAWLER": "true",
+        "ENABLE_AI": "true",
+        "ENABLE_PUSH": "true",
+        "ENABLE_CHINANEWS": "true",
+        "ENABLE_EASTMONEY": "true",
+        "ENABLE_CLS": "true",
+        "ENABLE_STCN": "true",
+        "ENABLE_WALLSTREETCN": "true",
+        "ENABLE_CNBC_FALLBACK": "true",
+        "RSS_REQUEST_TIMEOUT_SECONDS": "20",
+        "MAX_ITEMS_PER_CYCLE": "3",
+        "PUSH_MIN_IMPORTANCE": "4",
+        "TIMEZONE": "Asia/Shanghai",
+        "NOTIFICATION_USER_ID": "00000000-0000-0000-0000-000000000001",
+        "PUSH_DESTINATION": "personal-wecom",
+        "QUIET_HOURS_START": "22:30",
+        "QUIET_HOURS_END": "07:30",
+        "NOTIFICATION_MERGE_WINDOW_MINUTES": "15"
+      }
+    },
+    {
+      "name": "postgres",
+      "plan": "free",
+      "type": "database",
+      "version": "16"
+    },
+    {
+      "name": "redis",
+      "plan": "free",
+      "type": "cache",
+      "version": "7"
+    }
+  ]
+}

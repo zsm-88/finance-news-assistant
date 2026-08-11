@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}配置 · AI财经助手{% endblock %}
+
+{% set pending_reviews = 0 %}
+
+{% block content %}
+<div class="page-header">
+  <h2>系统配置</h2>
+  <p>运行时配置与环境变量</p>
+</div>
+
+<div class="card">
+  <div class="card-head"><h3>环境变量</h3></div>
+  <div class="card-body scroll-x">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>配置项</th>
+          <th>值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>APP_ENV</td><td>{{ settings.app_env }}</td></tr>
+        <tr><td>LOG_LEVEL</td><td><span class="tag tag-pending">{{ settings.log_level }}</span></td></tr>
+        <tr><td>ENABLE_CRAWLER</td><td><span class="tag {{ 'tag-success' if settings.enable_crawler else 'tag-fail' }}">{{ '已开启' if settings.enable_crawler else '已关闭' }}</span></td></tr>
+        <tr><td>ENABLE_AI</td><td><span class="tag {{ 'tag-success' if settings.enable_ai else 'tag-fail' }}">{{ '已开启' if settings.enable_ai else '已关闭' }}</span></td></tr>
+        <tr><td>ENABLE_PUSH</td><td><span class="tag {{ 'tag-success' if settings.enable_push else 'tag-fail' }}">{{ '已开启' if settings.enable_push else '已关闭' }}</span></td></tr>
+        <tr><td>AI_MODEL</td><td>{{ settings.ai_model or '未配置' }}</td></tr>
+        <tr><td>COLLECT_INTERVAL_SECONDS</td><td class="cell-numeric">{{ settings.collect_interval_seconds }}s</td></tr>
+        <tr><td>PUSH_MIN_IMPORTANCE</td><td class="stars">{{ '★' * settings.push_min_importance }}</td></tr>
+        <tr><td>MAX_ITEMS_PER_CYCLE</td><td class="cell-numeric">{{ settings.max_items_per_cycle }}</td></tr>
+        <tr><td>NOTIFICATION_USER_ID</td><td style="font-size: 12px; color: var(--text-tertiary); font-family: monospace;">{{ settings.notification_user_id }}</td></tr>
+        <tr><td>QUIET_HOURS</td><td>{{ settings.quiet_hours_start }} - {{ settings.quiet_hours_end }}</td></tr>
+        <tr><td>ENABLE_CHINANEWS</td><td><span class="tag {{ 'tag-success' if settings.enable_chinanews else 'tag-fail' }}">{{ '是' if settings.enable_chinanews else '否' }}</span></td></tr>
+        <tr><td>ENABLE_TMTPOST</td><td><span class="tag {{ 'tag-success' if settings.enable_tmtpost else 'tag-fail' }}">{{ '是' if settings.enable_tmtpost else '否' }}</span></td></tr>
+        <tr><td>ENABLE_EASTMONEY</td><td><span class="tag {{ 'tag-success' if settings.enable_eastmoney else 'tag-fail' }}">{{ '是' if settings.enable_eastmoney else '否' }}</span></td></tr>
+        <tr><td>ENABLE_CLS</td><td><span class="tag {{ 'tag-success' if settings.enable_cls else 'tag-fail' }}">{{ '是' if settings.enable_cls else '否' }}</span></td></tr>
+        <tr><td>ENABLE_STCN</td><td><span class="tag {{ 'tag-success' if settings.enable_stcn else 'tag-fail' }}">{{ '是' if settings.enable_stcn else '否' }}</span></td></tr>
+        <tr><td>ENABLE_WALLSTREETCN</td><td><span class="tag {{ 'tag-success' if settings.enable_wallstreetcn else 'tag-fail' }}">{{ '是' if settings.enable_wallstreetcn else '否' }}</span></td></tr>
+        <tr><td>ENABLE_JIN10</td><td><span class="tag {{ 'tag-success' if settings.enable_jin10 else 'tag-fail' }}">{{ '是' if settings.enable_jin10 else '否' }}</span></td></tr>
+        <tr><td>TIMEZONE</td><td>{{ settings.timezone }}</td></tr>
+        <tr><td>AI_BASE_URL / AI_API_KEY</td><td>{{ '已配置' if settings.ai_api_key else '未配置' }}</td></tr>
+        <tr><td>WECOM_WEBHOOK_URL</td><td>{{ '已配置' if settings.wecom_webhook_url else '未配置' }}</td></tr>
+        <tr><td>TELEGRAM_BOT_TOKEN / CHAT_ID</td><td>{{ '已配置' if settings.telegram_bot_token and settings.telegram_chat_id else '未配置' }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if system_configs %}
+<div class="card">
+  <div class="card-head"><h3>运行时配置 (system_configs)</h3></div>
+  <div class="card-body scroll-x">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>值</th>
+          <th>说明</th>
+          <th>更新人</th>
+          <th>更新时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for config in system_configs %}
+        <tr>
+          <td><span class="tag tag-pending">{{ config.config_key }}</span></td>
+          <td>{{ config.config_value | tojson }}</td>
+          <td style="color: var(--text-tertiary); font-size: 12px;">{{ config.description or '--' }}</td>
+          <td style="font-size: 12px;">{{ config.updated_by }}</td>
+          <td class="time-text">{{ config.updated_at.strftime('%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if recent_audits %}
+<div class="card">
+  <div class="card-head"><h3>最近审计日志</h3></div>
+  <div class="card-body scroll-x">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>操作者</th>
+          <th>动作</th>
+          <th>实体</th>
+          <th>实体ID</th>
+          <th>时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in recent_audits %}
+        <tr>
+          <td>{{ log.actor }}</td>
+          <td><span class="tag tag-warning">{{ log.action }}</span></td>
+          <td>{{ log.entity_type }}</td>
+          <td style="font-size: 11px; color: var(--text-tertiary); font-family: monospace;">{{ log.entity_id or '--' }}</td>
+          <td class="time-text">{{ log.created_at.strftime('%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

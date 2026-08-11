@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}大盘 · AI财经助手{% endblock %}
+
+{% set pending_reviews = pending_reviews %}
+
+{% block content %}
+<div class="page-header">
+  <h2>系统大盘</h2>
+  <p>系统运行状态总览 · 采集间隔 {{ collect_interval }}秒</p>
+</div>
+
+<div class="status-bar">
+  <span>
+    <span class="status-dot {{ 'green' if crawler_enabled else 'yellow' }}"></span>
+    采集: {{ '已开启' if crawler_enabled else '已关闭' }}
+  </span>
+  <span>
+    <span class="status-dot {{ 'green' if ai_enabled else 'yellow' }}"></span>
+    AI分析: {{ '已开启' if ai_enabled else '已关闭' }}
+  </span>
+  <span>
+    <span class="status-dot {{ 'green' if push_enabled else 'yellow' }}"></span>
+    推送: {{ '已开启' if push_enabled else '已关闭' }}
+  </span>
+  <span class="time-text">
+    数据源: 中新网{% if settings.enable_tmtpost %} + 钛媒体{% endif %}{% if settings.enable_eastmoney %} + 东方财富{% endif %}{% if settings.enable_cls %} + 财联社{% endif %}{% if settings.enable_stcn %} + 证券时报{% endif %}{% if settings.enable_wallstreetcn %} + 华尔街见闻{% endif %}{% if settings.enable_jin10 %} + 金十{% endif %}{% if settings.enable_cnbc_fallback %} + CNBC{% endif %}
+  </span>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-label">今日事件</div>
+    <div class="stat-value neutral">{{ today_events_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">最近事件</div>
+    <div class="stat-value neutral">{{ recent_events|length }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">AI待审核</div>
+    <div class="stat-value {{ 'rise' if pending_reviews > 0 else 'neutral' }}">{{ pending_reviews }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">失败任务</div>
+    <div class="stat-value {{ 'rise' if failed_jobs_count > 0 else 'neutral' }}">{{ failed_jobs_count }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><h3>最近任务</h3></div>
+  <div class="card-body scroll-x">
+    {% if recent_jobs %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>类型</th>
+          <th>状态</th>
+          <th>尝试</th>
+          <th>开始</th>
+          <th>错误</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in recent_jobs %}
+        <tr>
+          <td><span class="tag tag-pending">{{ job.job_type }}</span></td>
+          <td>
+            {% if job.status == 'failed' %}<span class="tag tag-fail">失败</span>
+            {% elif job.status == 'completed' %}<span class="tag tag-success">完成</span>
+            {% else %}<span class="tag tag-pending">{{ job.status }}</span>{% endif %}
+          </td>
+          <td class="cell-numeric">{{ job.attempt }}</td>
+          <td class="time-text">{{ job.started_at.strftime('%H:%M:%S') if job.started_at else '--' }}</td>
+          <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; color: var(--rise); font-size: 12px;">{{ job.error_message[:80] if job.error_message else '--' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state"><div class="empty-icon">📋</div><p>暂无任务记录</p></div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><h3>最新事件</h3></div>
+  <div class="card-body scroll-x">
+    {% if recent_events %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>标题</th>
+          <th>类型</th>
+          <th>重要性</th>
+          <th>状态</th>
+          <th>时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in recent_events %}
+        <tr>
+          <td><a href="/admin/news?page=1&page_size=20">{{ event.title[:60] }}{% if event.title|length > 60 %}...{% endif %}</a></td>
+          <td><span class="tag tag-pending">{{ event.event_type }}</span></td>
+          <td class="stars">{{ '★' * (event.importance or 0) }}</td>
+          <td>
+            {% if event.status == 'succeeded' %}<span class="tag tag-success">成功</span>
+            {% elif event.status == 'failed' %}<span class="tag tag-fail">失败</span>
+            {% elif event.status == 'pending' %}<span class="tag tag-pending">待处理</span>
+            {% elif event.status == 'pushed' %}<span class="tag tag-success">已推送</span>
+            {% else %}<span class="tag tag-warning">{{ event.status }}</span>{% endif %}
+          </td>
+          <td class="time-text">{{ event.occurred_at.strftime('%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state"><div class="empty-icon">🔔</div><p>暂无事件</p></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

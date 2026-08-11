@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "财经新闻",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 120,
+  "usingComponents": { "state-panel": "/components/state-panel/state-panel" }
+}

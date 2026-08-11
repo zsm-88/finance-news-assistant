@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "基金中心",
+  "enablePullDownRefresh": true,
+  "usingComponents": { "state-panel": "/components/state-panel/state-panel" }
+}

@@ -1,0 +1,33 @@
+<view class="market-detail-page page-enter">
+  <state-panel wx:if="{{status === 'loading'}}" status="loading" />
+  <state-panel wx:elif="{{status === 'error'}}" status="error" title="行情加载失败" description="请检查网络后重试" action-text="重新加载" bind:retry="retry" />
+  <block wx:else>
+    <view class="quote-hero">
+      <view class="quote-title-row"><view class="quote-heading"><text class="quote-name">{{quote.name}}</text><view class="quote-state-row"><text class="quote-state-tag">{{quote.marketStatusShortText}}</text><text class="quote-state">{{quote.marketStatusText}}</text></view></view><button class="refresh-button secondary-button" loading="{{refreshing}}" bindtap="manualRefresh">刷新</button></view>
+      <view class="hero-price-row"><text class="hero-price-label">{{quote.priceLabel}}</text><text class="hero-price">{{quote.priceText}}</text></view>
+      <view wx:if="{{quote.available}}" class="hero-change {{quote.changeClass}}"><text>{{quote.changeText}}</text><text>({{quote.changePercentText}})</text></view>
+      <text wx:else class="unavailable">暂无数据</text>
+      <view class="quote-flags"><text wx:if="{{quote.isStale}}" class="status-pill warning">最近有效数据</text><text wx:elif="{{quote.delayedText}}" class="status-pill">延迟</text><text class="quote-time">{{quote.dataTimeLabel}} {{quote.timestampFullText}}</text></view>
+      <text wx:if="{{quote.delayedText}}" class="quote-disclosure">{{quote.delayedText}}</text>
+    </view>
+
+    <view class="chart-workspace">
+      <text class="chart-eyebrow">PRICE · VOLUME · MOVING AVERAGE</text>
+      <scroll-view scroll-x class="segmented-scroll"><view class="segmented-control"><button wx:for="{{periodOptions}}" wx:key="value" data-value="{{item.value}}" class="segment-button {{selectedPeriod === item.value ? 'active' : ''}}" bindtap="selectPeriod">{{item.label}}</button></view></scroll-view>
+      <scroll-view wx:if="{{selectedPeriod !== 'intraday'}}" scroll-x class="range-scroll"><view class="range-control"><button wx:for="{{rangeOptions}}" wx:key="value" data-value="{{item.value}}" class="range-option {{selectedRange === item.value ? 'active' : ''}}" bindtap="selectRange">{{item.label}}</button></view></scroll-view>
+
+      <state-panel wx:if="{{historyStatus === 'loading'}}" compact status="loading" />
+      <view wx:elif="{{historyStatus === 'success'}}" class="chart-content">
+        <view class="legend-row"><text class="ma5">MA5</text><text class="ma10">MA10</text><text class="ma20">MA20</text><text class="ma60">MA60</text></view>
+        <finance-chart mode="{{history.chartMode}}" points="{{history.items}}" show-volume="{{true}}" />
+      </view>
+      <state-panel wx:else compact status="{{historyStatus}}" title="{{history && history.stateText ? history.stateText : '暂无历史行情'}}" description="{{historyStatus === 'error' ? '请稍后重试' : ''}}" action-text="{{historyStatus === 'error' ? '重新加载' : ''}}" bind:retry="refreshHistory" />
+    </view>
+
+    <view class="market-meta divider-list">
+      <view><text>数据来源</text><text>{{history && history.source ? history.source : quote.source}}</text></view>
+      <view><text>行情时间</text><text>{{history && history.asOfText ? history.asOfText : quote.timestampText}}</text></view>
+      <view><text>数据状态</text><text>{{history && history.is_delayed ? '延迟行情' : quote.marketStatusText}}</text></view>
+    </view>
+  </block>
+</view>

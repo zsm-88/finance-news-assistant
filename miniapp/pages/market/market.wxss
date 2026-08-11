@@ -1,0 +1,26 @@
+.market-page { padding-top: 18rpx; }
+.market-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24rpx; }
+.market-eyebrow { display: block; margin-bottom: 5rpx; color: var(--color-brand); font-size: 18rpx; font-weight: 700; }
+.refresh-button { min-width: 112rpx; padding: 0 24rpx; font-size: 24rpx; line-height: 62rpx; }
+.market-data-strip { display: flex; margin-bottom: 22rpx; align-items: center; gap: 12rpx; color: var(--color-text-secondary); font-size: 21rpx; }
+.status-dot { width: 8rpx; height: 8rpx; flex-shrink: 0; border-radius: 50%; background: var(--color-brand); }
+.market-tabs-scroll { width: calc(100% + 56rpx); margin: 0 -28rpx 22rpx; white-space: nowrap; }
+.market-tabs { display: inline-flex; margin: 0 28rpx; padding: 5rpx; gap: 4rpx; border: 1rpx solid var(--color-line); background: #081321; }
+.market-tab { min-width: 104rpx; margin: 0; padding: 0 18rpx; border: 0; border-radius: 2rpx; background: transparent; color: var(--color-text-secondary); font-size: 23rpx; line-height: 54rpx; }
+.market-tab::after { border: 0; }
+.market-tab.active { background: var(--color-brand-soft); color: var(--color-brand); font-weight: 700; box-shadow: none; }
+.quote-list { margin: 0 -28rpx; border-top: 3rpx solid var(--color-text); }
+.quote-row { position: relative; display: flex; min-height: 136rpx; align-items: center; justify-content: space-between; gap: 24rpx; padding: 20rpx 32rpx; border-bottom: 1rpx solid var(--color-line); }
+.quote-row:last-child { border-bottom: 0; }
+.quote-identity { min-width: 0; flex: 1; }
+.quote-name, .quote-price, .unavailable, .row-arrow { display: block; }
+.quote-name { overflow: hidden; font-size: 30rpx; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.quote-state-line { display: flex; margin-top: 9rpx; align-items: center; gap: 10rpx; }
+.quote-status { flex-shrink: 0; padding: 3rpx 7rpx; border: 1rpx solid var(--color-line); background: var(--color-surface-raised); color: var(--color-text-secondary); font-size: 17rpx; }
+.quote-time { overflow: hidden; color: var(--color-text-tertiary); font-size: 18rpx; text-overflow: ellipsis; white-space: nowrap; }
+.quote-value { min-width: 230rpx; flex-shrink: 0; text-align: right; }
+.quote-price { padding-right: 18rpx; font-size: 38rpx; font-weight: 750; font-variant-numeric: tabular-nums; }
+.quote-change { display: flex; justify-content: flex-end; gap: 18rpx; margin-top: 7rpx; font-size: 23rpx; font-weight: 600; }
+.unavailable { margin-top: 7rpx; color: var(--color-text-secondary); font-size: 23rpx; }
+.row-arrow { position: absolute; top: 48rpx; right: 13rpx; color: var(--color-text-tertiary); font-size: 32rpx; }
+@media (max-width: 380px) { .quote-value { min-width: 200rpx; } .quote-price { font-size: 34rpx; } }

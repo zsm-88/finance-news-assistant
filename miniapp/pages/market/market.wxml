@@ -1,0 +1,21 @@
+<view class="page-shell market-page page-enter">
+  <view class="market-toolbar page-header">
+    <view><text class="market-eyebrow">MARKET BOARD</text><text class="page-title">市场行情</text><text class="page-subtitle">数据更新 {{lastUpdated}}</text></view>
+    <button class="refresh-button secondary-button" loading="{{refreshing}}" bindtap="manualRefresh">刷新</button>
+  </view>
+  <view wx:if="{{hasStaleData}}" class="market-data-strip"><text class="status-dot"></text><text>数据源暂时不可用，部分标的已显示最近有效数据</text></view>
+  <view wx:elif="{{hasClosedData}}" class="market-data-strip"><text class="status-dot"></text><text>休市期间展示最近交易日真实收盘数据</text></view>
+  <view wx:elif="{{hasDelayedData}}" class="market-data-strip"><text class="status-dot"></text><text>部分行情为延迟数据，请以交易所数据为准</text></view>
+  <state-panel wx:if="{{status === 'loading'}}" status="loading" />
+  <state-panel wx:elif="{{status === 'error'}}" status="error" title="行情加载失败" description="请检查网络后重试" action-text="重新加载" bind:retry="retry" />
+  <state-panel wx:elif="{{status === 'empty'}}" status="empty" title="暂无行情数据" description="数据恢复后将在这里显示" />
+  <block wx:else>
+    <scroll-view scroll-x class="market-tabs-scroll"><view class="market-tabs"><button wx:for="{{groups}}" wx:key="key" data-key="{{item.key}}" class="market-tab {{activeGroup === item.key ? 'active' : ''}}" bindtap="selectGroup">{{item.title}}</button></view></scroll-view>
+    <view class="quote-list divider-list">
+      <view wx:for="{{visibleItems}}" wx:key="symbol" class="quote-row" data-symbol="{{item.symbol}}" bindtap="openDetail">
+        <view class="quote-identity"><text class="quote-name">{{item.name}}</text><view class="quote-state-line"><text class="quote-status">{{item.marketStatusShortText}}</text><text wx:if="{{item.available}}" class="quote-time">{{item.dataTimeLabel}} {{item.timestampText}}</text></view></view>
+        <view class="quote-value"><text class="quote-price {{item.changeClass}}">{{item.priceText}}</text><view wx:if="{{item.available}}" class="quote-change {{item.changeClass}}"><text>{{item.changeText}}</text><text>{{item.changePercentText}}</text></view><text wx:else class="unavailable">暂无数据</text><text class="row-arrow">›</text></view>
+      </view>
+    </view>
+  </block>
+</view>

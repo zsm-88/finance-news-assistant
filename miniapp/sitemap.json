@@ -1,0 +1,6 @@
+{
+  "desc": "AI财经助手页面索引",
+  "rules": [
+    { "action": "allow", "page": "*" }
+  ]
+}

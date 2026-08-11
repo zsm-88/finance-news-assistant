@@ -1,0 +1,86 @@
+<view class="ai-page page-enter">
+  <view class="ai-header">
+    <view class="ai-brand-row">
+      <view class="ai-mark" aria-hidden="true"><text>AI</text></view>
+      <view class="ai-heading">
+        <text class="ai-eyebrow">FINANCIAL INTELLIGENCE</text>
+        <text class="ai-title">AI 财经助手</text>
+      </view>
+      <view class="data-status"><text class="status-dot"></text><text>数据驱动</text></view>
+    </view>
+    <text class="ai-subtitle">基于真实新闻、行情与基金数据进行分析</text>
+  </view>
+
+  <scroll-view class="conversation" scroll-y="true" scroll-into-view="{{scrollTarget}}" enhanced="true" show-scrollbar="false">
+    <view wx:if="{{messages.length === 0}}" class="welcome-panel">
+      <text class="welcome-kicker">TODAY'S BRIEF</text>
+      <text class="welcome-title">今天想了解什么？</text>
+      <text class="welcome-copy">我会先检索项目内的真实财经数据，再给出有依据的中文分析。</text>
+      <view class="capability-grid" aria-label="助手能力">
+        <view><text class="capability-index">01</text><text>财经事件解读</text></view>
+        <view><text class="capability-index">02</text><text>市场影响分析</text></view>
+        <view><text class="capability-index">03</text><text>基金与行情分析</text></view>
+      </view>
+    </view>
+
+    <view class="quick-section">
+      <text class="quick-label">快捷提问</text>
+      <view class="quick-list">
+        <button wx:for="{{quickQuestions}}" wx:key="*this" class="quick-button" data-question="{{item}}" bindtap="askQuickQuestion" disabled="{{loading}}">{{item}}</button>
+      </view>
+    </view>
+
+    <block wx:for="{{messages}}" wx:key="id">
+      <view wx:if="{{item.role === 'user'}}" id="{{item.id}}" class="message user-message">
+        <text class="message-role">你</text>
+        <text class="user-content">{{item.content}}</text>
+      </view>
+      <view wx:else id="{{item.id}}" class="message assistant-message">
+        <view class="answer-head"><text class="answer-mark">AI</text><text class="answer-intent">{{item.response.intentText}}</text></view>
+        <text class="answer-summary">{{item.response.summary}}</text>
+        <text class="answer-body">{{item.response.answer}}</text>
+
+        <view wx:if="{{item.response.key_points.length}}" class="answer-section">
+          <text class="answer-section-title">关键因素</text>
+          <view wx:for="{{item.response.key_points}}" wx:key="*this" class="point-row"><text class="point-index">{{index + 1}}</text><text class="point-text">{{item}}</text></view>
+        </view>
+
+        <view wx:if="{{item.response.market_impacts.length}}" class="answer-section">
+          <text class="answer-section-title">市场影响</text>
+          <view wx:for="{{item.response.market_impacts}}" wx:key="*this" class="impact-row"><text class="impact-line"></text><text>{{item}}</text></view>
+        </view>
+
+        <view wx:if="{{item.response.references.length}}" class="answer-section reference-section">
+          <text class="answer-section-title">数据来源</text>
+          <view wx:for="{{item.response.references}}" wx:key="id" class="reference-row {{item.type === 'news' || item.type === 'market' || item.type === 'fund' ? 'clickable' : ''}}" data-id="{{item.id}}" data-type="{{item.type}}" bindtap="openReference">
+            <view class="reference-copy"><text class="reference-title">{{item.title}}</text><text class="reference-meta">{{item.source}}</text></view>
+            <text wx:if="{{item.type === 'news' || item.type === 'market' || item.type === 'fund'}}" class="reference-arrow">›</text>
+          </view>
+        </view>
+
+        <view class="answer-footer">
+          <text>数据时间 {{item.response.dataTimeText}}</text>
+          <text wx:if="{{item.response.showDataStatus}}" class="stale-note">{{item.response.data_status}}</text>
+          <text wx:if="{{item.response.disclaimer}}" class="disclaimer">{{item.response.disclaimer}}</text>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{loading}}" id="assistant-loading" class="assistant-loading">
+      <text class="loading-mark">AI</text><view class="loading-lines"><text></text><text></text><text></text></view><text>正在检索财经数据</text>
+    </view>
+    <view wx:if="{{errorMessage}}" id="assistant-error" class="assistant-error">
+      <text class="error-title">{{errorMessage}}</text>
+      <button class="retry-button" bindtap="retry">重新提问</button>
+    </view>
+    <view class="scroll-spacer"></view>
+  </scroll-view>
+
+  <view class="composer-shell">
+    <view class="composer">
+      <textarea class="question-input" value="{{inputValue}}" bindinput="onInput" maxlength="1000" auto-height="true" fixed="true" disabled="{{loading}}" placeholder="询问新闻、行情或我的基金" confirm-type="send" bindconfirm="sendMessage"></textarea>
+      <button class="send-button" bindtap="sendMessage" disabled="{{loading || !inputValue}}">发送</button>
+    </view>
+    <text class="composer-note">AI 仅基于可用数据分析，不构成投资建议</text>
+  </view>
+</view>

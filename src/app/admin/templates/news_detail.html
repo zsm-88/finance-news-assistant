@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}新闻详情 · AI财经助手{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>新闻详情</h2>
+  <p><a href="/admin/news">← 返回新闻列表</a></p>
+</div>
+
+<div class="detail-section card">
+  <div class="card-head"><h3>基本信息</h3></div>
+  <div class="card-body">
+    <div class="detail-field"><span class="label">标题</span><div class="value" style="font-size: 16px; font-weight: 650;">{{ news.title }}</div></div>
+    <div class="detail-field"><span class="label">内容</span><div class="value" style="max-height: 200px; overflow-y: auto; line-height: 1.6;">{{ news.content }}</div></div>
+    {% if news.url %}<div class="detail-field"><span class="label">原文链接</span><div class="value"><a href="{{ news.url }}" target="_blank">{{ news.url }}</a></div></div>{% endif %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 12px;">
+      <div class="detail-field"><span class="label">来源</span><div class="value"><span class="tag tag-pending">{{ news.source }}</span></div></div>
+      <div class="detail-field"><span class="label">外部ID</span><div class="value" style="font-size: 12px; color: var(--text-tertiary);">{{ news.source_item_id }}</div></div>
+      <div class="detail-field"><span class="label">发布时间</span><div class="value time-text">{{ news.published_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</div></div>
+      <div class="detail-field"><span class="label">采集时间</span><div class="value time-text">{{ news.collected_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="detail-section card">
+  <div class="card-head"><h3>Event</h3><span class="tag tag-pending">{{ event.event_type }}</span></div>
+  <div class="card-body">
+    <div class="detail-field"><span class="label">标题</span><div class="value">{{ event.title }}</div></div>
+    <div class="detail-field"><span class="label">Event Key</span><div class="value" style="font-size: 12px; color: var(--text-tertiary);">{{ event.event_key }}</div></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 12px;">
+      <div class="detail-field"><span class="label">重要性</span><div class="value stars">{{ '★' * (event.importance or 0) }}</div></div>
+      <div class="detail-field"><span class="label">状态</span><div class="value">
+        {% if event.status == 'succeeded' %}<span class="tag tag-success">成功</span>
+        {% elif event.status == 'failed' %}<span class="tag tag-fail">失败</span>
+        {% elif event.status == 'pending' %}<span class="tag tag-pending">待处理</span>
+        {% elif event.status == 'pushed' %}<span class="tag tag-success">已推送</span>
+        {% else %}<span class="tag tag-warning">{{ event.status }}</span>{% endif %}
+      </div></div>
+      <div class="detail-field"><span class="label">发生时间</span><div class="value time-text">{{ event.occurred_at.strftime('%Y-%m-%d %H:%M') }}</div></div>
+    </div>
+    {% if event.summary %}<div class="detail-field" style="margin-top: 12px;"><span class="label">摘要</span><div class="value" style="color: var(--text-secondary);">{{ event.summary }}</div></div>{% endif %}
+  </div>
+</div>
+
+{% if analysis %}
+<div class="detail-section card">
+  <div class="card-head"><h3>AI 分析</h3></div>
+  <div class="card-body">
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;">
+      <div class="detail-field"><span class="label">分类</span><div class="value">{{ analysis.category }}</div></div>
+      <div class="detail-field"><span class="label">重要性</span><div class="value stars">{{ '★' * analysis.importance }}</div></div>
+      <div class="detail-field"><span class="label">置信度</span><div class="value" style="font-variant-numeric: tabular-nums;">{{ '%.1f%%' | format(analysis.confidence * 100) }}</div></div>
+      <div class="detail-field"><span class="label">提供商</span><div class="value" style="font-size: 12px;">{{ analysis.provider }} / {{ analysis.model }}</div></div>
+    </div>
+    <div class="detail-field" style="margin-top: 12px;"><span class="label">摘要</span><div class="value" style="color: var(--text-secondary); line-height: 1.6;">{{ analysis.summary }}</div></div>
+    {% if analysis.markets %}
+    <div class="detail-field" style="margin-top: 12px;"><span class="label">市场标签</span><div class="value">{{ analysis.markets | tojson }}</div></div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if deliveries %}
+<div class="detail-section card">
+  <div class="card-head"><h3>推送记录</h3></div>
+  <div class="card-body scroll-x">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>渠道</th>
+          <th>目标</th>
+          <th>状态</th>
+          <th>尝试次数</th>
+          <th>错误</th>
+          <th>发送时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for delivery in deliveries %}
+        <tr>
+          <td><span class="tag tag-pending">{{ delivery.channel }}</span></td>
+          <td style="font-size: 12px;">{{ delivery.destination }}</td>
+          <td>
+            {% if delivery.status == 'sent' %}<span class="tag tag-success">已发送</span>
+            {% elif delivery.status == 'failed' %}<span class="tag tag-fail">失败</span>
+            {% elif delivery.status == 'dead_letter' %}<span class="tag tag-fail">死信</span>
+            {% elif delivery.status == 'pending' %}<span class="tag tag-pending">待发送</span>
+            {% else %}<span class="tag tag-warning">{{ delivery.status }}</span>{% endif %}
+          </td>
+          <td class="cell-numeric">{{ delivery.attempts }}</td>
+          <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; color: var(--rise); font-size: 12px;">{{ delivery.last_error[:60] if delivery.last_error else '--' }}</td>
+          <td class="time-text">{{ delivery.sent_at.strftime('%m-%d %H:%M') if delivery.sent_at else '--' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<div class="detail-section">
+  <form action="/admin/news/{{ news.id }}/reanalyze" method="post" style="display: inline;">
+    <button type="submit" class="btn btn-danger" onclick="return confirm('确认重新分析此新闻？')">🔄 重新分析</button>
+  </form>
+  <a href="/admin/deliveries" class="btn btn-outline" style="margin-left: 8px;">📨 查看推送日志</a>
+</div>
+
+{% if not analysis and not deliveries %}
+<div class="detail-section card">
+  <div class="card-body">
+    <div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <p>暂无 AI 分析结果和推送记录</p>
+      <p style="margin-top: 8px; font-size: 12px;">确认 AI 分析和推送功能已开启（ENABLE_AI=true, ENABLE_PUSH=true）</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

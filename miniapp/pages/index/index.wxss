@@ -1,0 +1,252 @@
+.dashboard {
+  padding-top: 18rpx;
+}
+
+.dashboard-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 4rpx 22rpx;
+  gap: 20rpx;
+}
+
+.brand-lockup { display: flex; min-width: 0; align-items: center; gap: 16rpx; }
+.brand-mark { display: flex; width: 56rpx; height: 56rpx; flex-shrink: 0; align-items: center; justify-content: center; border: 1rpx solid var(--color-brand); background: var(--color-brand-soft); color: var(--color-brand); font-size: 25rpx; font-weight: 800; }
+.brand-copy { min-width: 0; }
+.brand-copy .page-title { font-size: 38rpx; }
+.date-block { flex-shrink: 0; text-align: right; }
+.date-block text { display: block; }
+.date-block text:first-child { color: var(--color-brand); font-size: 18rpx; font-weight: 700; }
+.date-block text:last-child { margin-top: 4rpx; color: var(--color-text-secondary); font-size: 21rpx; }
+
+.terminal-eyebrow {
+  display: block;
+  margin-bottom: 4rpx;
+  color: var(--color-brand);
+  font-size: 18rpx;
+  font-weight: 700;
+}
+
+.source-status {
+  margin-bottom: 24rpx;
+}
+
+.market-terminal {
+  overflow: hidden;
+  border-top: 4rpx solid var(--color-text);
+}
+
+.primary-market {
+  display: flex;
+  min-height: 220rpx;
+  align-items: stretch;
+  padding: 26rpx 24rpx 22rpx;
+  gap: 18rpx;
+}
+
+.primary-copy {
+  width: 55%;
+  min-width: 0;
+}
+
+.primary-price,
+.secondary-price,
+.primary-change,
+.market-state { display: block; }
+.market-name-row, .secondary-name-row, .secondary-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10rpx; }
+.primary-name { color: var(--color-text); font-size: 25rpx; font-weight: 650; }
+.market-status-tag { flex-shrink: 0; padding: 4rpx 8rpx; border: 1rpx solid var(--color-line); background: var(--color-surface-raised); color: var(--color-text-secondary); font-size: 17rpx; }
+.primary-price-line { display: flex; margin-top: 14rpx; align-items: baseline; gap: 10rpx; }
+.price-label { color: var(--color-text-tertiary); font-size: 18rpx; }
+
+.primary-price {
+  font-size: 56rpx;
+  font-weight: 750;
+  line-height: 1.08;
+  font-variant-numeric: tabular-nums;
+}
+
+.primary-change { display: flex; margin-top: 8rpx; gap: 14rpx; font-size: 24rpx; font-weight: 650; }
+.market-state { margin-top: 16rpx; color: var(--color-text-tertiary); font-size: 19rpx; line-height: 1.5; }
+.primary-trend { width: 45%; min-width: 0; align-self: center; }
+.secondary-market-grid { display: grid; border-top: 1rpx solid var(--color-line); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.secondary-market { min-width: 0; padding: 20rpx 24rpx; border-right: 1rpx solid var(--color-line); }
+.secondary-market:last-child { border-right: 0; }
+.secondary-price { margin-top: 8rpx; font-size: 30rpx; font-weight: 700; font-variant-numeric: tabular-nums; }
+.secondary-status, .secondary-time { flex-shrink: 0; color: var(--color-text-tertiary); font-size: 17rpx; }
+.secondary-bottom { margin-top: 4rpx; }
+.secondary-bottom .market-percent { margin-top: 0; }
+
+.market-name,
+.market-price,
+.market-percent,
+.featured-kicker,
+.featured-title,
+.featured-summary,
+.news-meta,
+.compact-news-title,
+.home-fund-name,
+.trend-caption {
+  display: block;
+}
+
+.market-name {
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: 22rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.market-percent {
+  margin-top: 6rpx;
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.featured-news {
+  position: relative;
+  padding: 28rpx 28rpx 26rpx 34rpx;
+  background: var(--color-surface);
+  border-top: 1rpx solid var(--color-line);
+  border-bottom: 1rpx solid var(--color-line);
+}
+
+.featured-accent {
+  position: absolute;
+  top: 30rpx;
+  bottom: 30rpx;
+  left: 0;
+  width: 5rpx;
+  background: var(--color-rise);
+}
+
+.featured-kicker {
+  color: var(--color-rise);
+  font-size: 22rpx;
+  font-weight: 650;
+}
+
+.featured-title {
+  margin-top: 12rpx;
+  overflow-wrap: anywhere;
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.42;
+}
+
+.featured-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 14rpx;
+  color: var(--color-text-secondary);
+  font-size: 25rpx;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.news-meta {
+  margin-top: 14rpx;
+  color: var(--color-text-tertiary);
+  font-size: 22rpx;
+}
+
+.compact-news {
+  margin-top: 16rpx;
+}
+
+.compact-news-row {
+  padding: 22rpx 24rpx;
+  border-bottom: 1rpx solid var(--color-line);
+}
+
+.compact-news-row:last-child {
+  border-bottom: 0;
+}
+
+.compact-news-title {
+  overflow-wrap: anywhere;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.48;
+}
+
+.home-fund-row {
+  display: flex;
+  min-height: 112rpx;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid var(--color-line);
+}
+
+.home-fund-row:last-child {
+  border-bottom: 0;
+}
+
+.home-fund-identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.home-fund-name {
+  overflow: hidden;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-fund-identity .meta-text {
+  display: block;
+  margin-top: 8rpx;
+}
+
+.home-fund-value {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.home-fund-value text {
+  display: block;
+}
+
+.home-fund-value text:last-child {
+  margin-top: 6rpx;
+  font-size: 25rpx;
+  font-weight: 650;
+}
+
+.fund-empty {
+  display: flex;
+  min-height: 128rpx;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  color: var(--color-text-secondary);
+}
+
+.trend-caption {
+  margin-top: 6rpx;
+  color: var(--color-text-tertiary);
+  font-size: 21rpx;
+}
+
+.trend-chart {
+  padding: 18rpx 20rpx;
+  border-top: 3rpx solid var(--color-brand);
+}
+
+@media (max-width: 380px) {
+  .primary-market { min-height: 200rpx; }
+  .primary-price { font-size: 48rpx; }
+  .market-state { font-size: 18rpx; }
+}
+
+.dashboard-updated {
+  margin-top: 40rpx;
+  color: var(--color-text-tertiary);
+  font-size: 21rpx;
+  text-align: center;
+}

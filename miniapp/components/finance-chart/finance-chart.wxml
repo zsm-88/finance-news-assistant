@@ -1,0 +1,8 @@
+<view class="chart-shell">
+  <canvas id="financeChart" type="2d" class="finance-chart" catchtouchmove="onTouchMove" bindtouchend="onTouchEnd"></canvas>
+  <view wx:if="{{tooltip}}" class="chart-tooltip">
+    <text class="tooltip-date">{{tooltip.date}}</text>
+    <view wx:if="{{tooltip.mode === 'market'}}" class="tooltip-grid"><text>开 {{tooltip.open}}</text><text>高 {{tooltip.high}}</text><text>低 {{tooltip.low}}</text><text>收 {{tooltip.close}}</text><text class="tooltip-volume">量 {{tooltip.volume}}</text></view>
+    <view wx:else class="tooltip-nav"><text>净值 {{tooltip.value}}</text></view>
+  </view>
+</view>

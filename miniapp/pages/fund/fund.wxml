@@ -1,0 +1,37 @@
+<view class="page-shell fund-page page-enter">
+  <view class="fund-header page-header">
+    <view><text class="page-title">基金中心</text><text class="page-subtitle">公布净值与盘中估算分开展示</text></view>
+    <button class="refresh-button secondary-button" loading="{{refreshing}}" bindtap="manualRefresh">刷新</button>
+  </view>
+  <form class="search-form" bindsubmit="search">
+    <view class="search-bar">
+      <input name="query" value="{{query}}" bindinput="onQueryInput" placeholder="输入基金代码或名称" placeholder-class="search-placeholder" confirm-type="search" />
+      <button form-type="submit">搜索</button>
+    </view>
+  </form>
+  <view wx:if="{{searchStatus !== 'idle'}}" class="search-section surface">
+    <view class="section-head"><text class="section-title">搜索结果</text></view>
+    <state-panel wx:if="{{searchStatus === 'loading'}}" compact status="loading" />
+    <state-panel wx:elif="{{searchStatus === 'error'}}" compact status="error" title="搜索失败" description="请稍后重试" />
+    <state-panel wx:elif="{{searchStatus === 'empty'}}" compact status="empty" title="未找到相关基金" />
+    <view wx:else class="search-results">
+      <view wx:for="{{searchItems}}" wx:key="code" class="search-row"><view class="fund-identity" data-code="{{item.code}}" bindtap="openDetail"><text class="fund-name">{{item.name}}</text><text class="fund-meta">{{item.code}} · {{item.fund_type || '类型暂无数据'}}</text></view><button class="favorite-button text-button" data-code="{{item.code}}" catchtap="addFund">加入自选</button></view>
+    </view>
+  </view>
+
+  <view class="section-head watchlist-head"><text class="section-title">我的自选</text><text class="meta-text">更新 {{lastUpdated}}</text></view>
+  <state-panel wx:if="{{status === 'loading'}}" status="loading" />
+  <state-panel wx:elif="{{status === 'error'}}" status="error" title="基金数据加载失败" description="请检查网络后重试" action-text="重新加载" bind:retry="retry" />
+  <state-panel wx:elif="{{status === 'empty'}}" status="empty" title="还没有添加自选基金" description="通过上方搜索添加基金" />
+  <view wx:else class="watchlist">
+    <view wx:for="{{items}}" wx:key="code" class="fund-item surface" data-code="{{item.code}}" bindtap="openDetail">
+      <view class="fund-item-head"><view class="fund-identity"><text class="fund-name">{{item.name}}</text><text class="fund-meta">{{item.code}} · {{item.fund_type || '类型暂无数据'}}</text></view><button class="remove-button icon-button" data-code="{{item.code}}" catchtap="removeFund" aria-label="移除自选">×</button></view>
+      <view class="fund-values">
+        <view class="official-value"><text class="value-label">{{item.officialLabelText}}</text><text class="value-number">{{item.navText}}</text><text class="value-date">{{item.officialStaleText || '净值日期'}} {{item.navDateCompactText}}</text></view>
+        <view class="estimate-value"><text class="value-label">盘中估算</text><text class="value-number">{{item.estimateDisplayText}}</text><text class="value-date {{item.estimateReliable ? item.estimateChangeClass : 'flat'}}">{{item.estimateChangeDisplayText}}</text></view>
+      </view>
+      <view class="fund-status-row"><text class="fund-market-tag">{{item.marketStatusText}}</text><text wx:if="{{item.estimateReliable}}" class="meta-text">{{item.estimateSourceText}}</text><text wx:elif="{{item.estimateStaleText}}" class="warning-text">{{item.estimateStaleText}}</text></view>
+      <view wx:if="{{item.position}}" class="position-line"><text>持仓收益</text><block wx:if="{{item.position.estimateReliable}}"><text class="position-profit {{item.position.estimatedProfitClass}}">{{item.position.estimatedProfitText}}</text><text class="position-rate {{item.position.estimatedProfitClass}}">{{item.position.estimatedProfitRateText}}</text></block><text wx:else class="flat">暂无可靠估值</text></view>
+    </view>
+  </view>
+</view>

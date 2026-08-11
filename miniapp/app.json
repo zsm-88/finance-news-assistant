@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/news/news",
+    "pages/market/market",
+    "pages/market-detail/market-detail",
+    "pages/fund/fund",
+    "pages/fund-detail/fund-detail",
+    "pages/ai/ai",
+    "pages/news-detail/news-detail"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#07111f",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "AI财经助手",
+    "backgroundColor": "#07111f",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#738198",
+    "selectedColor": "#30c7e8",
+    "backgroundColor": "#081321",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "assets/tabbar/home-normal.png", "selectedIconPath": "assets/tabbar/home-active.png" },
+      { "pagePath": "pages/news/news", "text": "新闻", "iconPath": "assets/tabbar/news-normal.png", "selectedIconPath": "assets/tabbar/news-active.png" },
+      { "pagePath": "pages/market/market", "text": "行情", "iconPath": "assets/tabbar/market-normal.png", "selectedIconPath": "assets/tabbar/market-active.png" },
+      { "pagePath": "pages/fund/fund", "text": "基金", "iconPath": "assets/tabbar/fund-normal.png", "selectedIconPath": "assets/tabbar/fund-active.png" },
+      { "pagePath": "pages/ai/ai", "text": "AI", "iconPath": "assets/tabbar/ai-normal.png", "selectedIconPath": "assets/tabbar/ai-active.png" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,46 @@
+.state-panel {
+  display: flex;
+  min-height: 360rpx;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40rpx 28rpx;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.state-panel.compact {
+  min-height: 200rpx;
+  padding: 24rpx;
+}
+
+.skeleton-stack {
+  width: 100%;
+}
+
+.state-symbol {
+  display: flex;
+  width: 64rpx;
+  height: 64rpx;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid var(--color-line);
+  border-radius: 50%;
+  color: var(--color-text-tertiary);
+  font-size: 28rpx;
+}
+
+.state-title {
+  margin-top: 20rpx;
+  color: var(--color-text);
+  font-size: 28rpx;
+  font-weight: 650;
+}
+
+.state-description {
+  max-width: 520rpx;
+  margin-top: 10rpx;
+  color: var(--color-text-secondary);
+  font-size: 24rpx;
+  line-height: 1.55;
+}

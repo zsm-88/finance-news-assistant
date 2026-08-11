@@ -1,0 +1,58 @@
+.fund-detail-page { min-height: 100vh; padding-bottom: calc(48rpx + env(safe-area-inset-bottom)); }
+.fund-hero, .detail-band { background: var(--color-surface); }
+.fund-hero { padding: 34rpx 30rpx 28rpx; border-top: 3rpx solid var(--color-brand); border-bottom: 1rpx solid var(--color-line); }
+.fund-title-row, .hero-actions, .history-meta, .estimate-position-values, .holding-row { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; }
+.fund-title { min-width: 0; flex: 1; }
+.fund-name, .fund-code, .company-text, .valuation-label, .valuation-number, .valuation-meta, .valuation-source, .band-caption, .calculation-note, .holding-note, .holding-name, .holding-code { display: block; }
+.fund-name { overflow-wrap: anywhere; font-size: 36rpx; font-weight: 700; line-height: 1.35; }
+.fund-code, .company-text { margin-top: 8rpx; color: var(--color-text-tertiary); font-size: 22rpx; }
+.favorite-button { min-width: 142rpx; flex-shrink: 0; padding: 0 18rpx; color: var(--color-brand); font-size: 22rpx; line-height: 58rpx; }
+.valuation-grid { display: grid; margin-top: 28rpx; padding: 24rpx 0; border-top: 1rpx solid var(--color-line); border-bottom: 1rpx solid var(--color-line); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.valuation-grid > view { min-width: 0; padding: 0 22rpx; }
+.valuation-grid > view:first-child { padding-left: 0; border-right: 1rpx solid var(--color-line); }
+.valuation-label { color: var(--color-text-secondary); font-size: 23rpx; font-weight: 600; }
+.valuation-number { margin-top: 10rpx; overflow: hidden; font-size: 52rpx; font-weight: 750; letter-spacing: 0; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.valuation-meta { margin-top: 8rpx; color: var(--color-text-secondary); font-size: 22rpx; }
+.valuation-source { margin-top: 6rpx; color: var(--color-text-tertiary); font-size: 20rpx; }
+.estimate-disclosure { display: flex; margin-top: 16rpx; flex-wrap: wrap; gap: 8rpx 18rpx; color: var(--color-text-tertiary); font-size: 21rpx; line-height: 1.45; }
+.detail-market-tag { padding: 3rpx 8rpx; border: 1rpx solid var(--color-line); background: var(--color-surface-raised); color: var(--color-text-secondary); }
+.warning-text { color: var(--color-warning) !important; }
+.hero-actions { margin-top: 18rpx; color: var(--color-text-tertiary); font-size: 21rpx; }
+.hero-actions > text { min-width: 0; flex: 1; }
+.hero-actions button { flex-shrink: 0; font-size: 22rpx; }
+.detail-band { margin-top: 14rpx; padding: 30rpx; border-top: 1rpx solid var(--color-line); border-bottom: 1rpx solid var(--color-line); }
+.band-caption { margin-top: 6rpx; color: var(--color-text-tertiary); font-size: 21rpx; }
+.nav-range-row { display: flex; margin: 4rpx 0 12rpx; gap: 28rpx; }
+.range-option { position: relative; min-width: auto; margin: 0; padding: 4rpx 0 12rpx; border: 0; background: transparent; color: var(--color-text-tertiary); font-size: 23rpx; line-height: 1.5; }
+.range-option::after { border: 0; }
+.range-option.active { color: var(--color-brand); font-weight: 700; }
+.range-option.active::before { position: absolute; right: 0; bottom: 4rpx; left: 0; height: 3rpx; background: var(--color-brand); content: ''; }
+.history-meta { margin-top: 8rpx; color: var(--color-text-tertiary); font-size: 21rpx; }
+.position-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1rpx solid var(--color-line); }
+.position-overview > view { display: flex; min-width: 0; padding: 20rpx 0; flex-direction: column; gap: 8rpx; border-bottom: 1rpx solid var(--color-line); }
+.position-overview > view:nth-child(odd) { border-right: 1rpx solid var(--color-line); }
+.position-overview > view:nth-child(even) { padding-left: 24rpx; }
+.position-overview text:first-child { color: var(--color-text-secondary); font-size: 22rpx; }
+.position-overview text:last-child { overflow: hidden; font-size: 30rpx; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.estimate-position { margin-top: 18rpx; padding: 18rpx 20rpx; border-left: 3rpx solid var(--color-brand); background: var(--color-surface-raised); }
+.estimate-position-title { color: var(--color-text-secondary); font-size: 22rpx; }
+.estimate-position-values { margin-top: 10rpx; font-size: 24rpx; font-weight: 600; }
+.position-editor { display: grid; margin-top: 24rpx; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14rpx; }
+.position-editor label { min-width: 0; }
+.position-editor label > text { display: block; margin-bottom: 9rpx; color: var(--color-text-secondary); font-size: 22rpx; }
+.position-editor input { height: 70rpx; padding: 0 16rpx; border: 1rpx solid var(--color-line); border-radius: var(--radius-control); background: #081321; color: var(--color-text); font-size: 24rpx; }
+.save-button { grid-column: 1 / -1; margin-top: 4rpx; font-size: 25rpx; line-height: 70rpx; }
+.delete-position { margin-top: 18rpx; color: var(--color-text-secondary); font-size: 22rpx; }
+.calculation-note, .holding-note { margin-top: 18rpx; color: var(--color-text-tertiary); font-size: 21rpx; line-height: 1.55; }
+.report-date { color: var(--color-text-tertiary); font-size: 21rpx; }
+.holding-list { border-top: 1rpx solid var(--color-line); }
+.holding-columns { display: grid; min-height: 54rpx; align-items: center; color: var(--color-text-tertiary); font-size: 19rpx; grid-template-columns: minmax(0, 1fr) 140rpx 130rpx; text-align: right; }
+.holding-columns text:first-child { text-align: left; }
+.holding-row { min-height: 92rpx; border-bottom: 1rpx solid var(--color-line); }
+.holding-row > view { min-width: 0; flex: 1; }
+.holding-name { overflow: hidden; font-size: 26rpx; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.holding-code { margin-top: 5rpx; color: var(--color-text-tertiary); font-size: 20rpx; }
+.holding-metrics { display: grid; width: 290rpx; flex-shrink: 0; align-items: center; grid-template-columns: 150rpx 140rpx; text-align: right; }
+.holding-change, .holding-weight { font-weight: 650; font-variant-numeric: tabular-nums; }
+.holding-weight { color: var(--color-brand); }
+@media (max-width: 380px) { .holding-metrics { width: 260rpx; grid-template-columns: 140rpx 120rpx; } .holding-columns { grid-template-columns: minmax(0, 1fr) 140rpx 120rpx; } }

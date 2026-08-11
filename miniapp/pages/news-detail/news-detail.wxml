@@ -1,0 +1,31 @@
+<view class="article-page page-enter">
+  <state-panel wx:if="{{status === 'loading'}}" status="loading" />
+  <state-panel wx:elif="{{status === 'error'}}" status="error" title="新闻加载失败" description="请检查网络后重试" action-text="重新加载" bind:retry="loadDetail" />
+  <view wx:else class="article-flow">
+    <view class="article-head">
+      <text wx:if="{{detail.importance}}" class="article-kicker">重要性 {{detail.importanceText}}</text>
+      <text class="article-title">{{detail.title}}</text>
+      <text class="article-meta">{{detail.source}} · {{detail.publishedAtText}}</text>
+    </view>
+    <view wx:if="{{detail.coreSummary}}" class="summary-block"><text class="section-eyebrow">核心摘要</text><text class="summary-text">{{detail.coreSummary}}</text></view>
+    <view class="article-section analysis-section">
+      <view class="article-section-head"><text class="article-section-title">AI 分析</text><text wx:if="{{detail.analysis}}" class="status-pill">{{detail.analysis.categoryText}}</text></view>
+      <block wx:if="{{detail.analysis}}"><text wx:if="{{detail.analysisBody}}" class="article-body">{{detail.analysisBody}}</text><text class="analysis-confidence">分析置信度 {{detail.analysis.confidenceText}}</text></block>
+      <text wx:else class="empty-copy">暂无 AI 分析</text>
+    </view>
+    <view class="article-section impact-section">
+      <text class="article-section-title">市场影响</text>
+      <view wx:if="{{detail.market_impacts.length}}" class="impact-list">
+        <view wx:for="{{detail.market_impacts}}" wx:key="asset" class="impact-row"><view class="impact-main"><text class="impact-asset">{{item.assetText}}</text><text class="impact-direction impact-{{item.direction}}">{{item.directionText}}</text><text class="impact-confidence">置信度 {{item.confidenceText}}</text></view><text class="impact-reason">{{item.reason}}</text></view>
+      </view>
+      <text wx:else class="empty-copy">暂无市场影响分析</text>
+    </view>
+    <view wx:if="{{detail.event}}" class="article-section event-section"><text class="article-section-title">相关事件</text><text class="event-title">{{detail.event.title}}</text><text wx:if="{{detail.event.summary}}" class="article-body event-summary">{{detail.event.summary}}</text></view>
+    <view wx:if="{{detail.content}}" class="article-section content-section"><text class="article-section-title">原文内容</text><text class="article-body original-content">{{detail.content}}</text></view>
+    <view wx:if="{{detail.related_news.length}}" class="article-section related-section">
+      <text class="article-section-title">相关新闻</text>
+      <view wx:for="{{detail.related_news}}" wx:key="id" class="related-item" data-id="{{item.id}}" bindtap="openRelated"><text class="related-title">{{item.title}}</text><text class="related-time">{{item.publishedRelativeText}}</text></view>
+    </view>
+    <button wx:if="{{detail.url}}" class="source-action secondary-button" bindtap="openSource">复制原文链接</button>
+  </view>
+</view>

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}新闻 · AI财经助手{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>新闻列表</h2>
+  <p>{{ total }} 条新闻</p>
+</div>
+
+<div class="filter-bar">
+  <form action="/admin/news" method="get" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <input type="hidden" name="page" value="1">
+    <input type="hidden" name="page_size" value="{{ page_size }}">
+    <select name="importance">
+      <option value="">全部星级</option>
+      {% for i in range(1, 6) %}
+      <option value="{{ i }}" {% if importance == i %}selected{% endif %}>{{ '★' * i }}</option>
+      {% endfor %}
+    </select>
+    <select name="category">
+      <option value="">全部分类</option>
+      <option value="macro" {% if category == 'macro' %}selected{% endif %}>宏观</option>
+      <option value="market" {% if category == 'market' %}selected{% endif %}>市场</option>
+      <option value="company" {% if category == 'company' %}selected{% endif %}>公司</option>
+      <option value="commodity" {% if category == 'commodity' %}selected{% endif %}>商品</option>
+      <option value="forex" {% if category == 'forex' %}selected{% endif %}>外汇</option>
+      <option value="geopolitics" {% if category == 'geopolitics' %}selected{% endif %}>地缘</option>
+      <option value="policy" {% if category == 'policy' %}selected{% endif %}>政策</option>
+    </select>
+    <button type="submit">筛选</button>
+    <a href="/admin/news" class="btn btn-outline">清除</a>
+  </form>
+</div>
+
+<div class="card scroll-x">
+  {% if records %}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>来源</th>
+        <th>分类</th>
+        <th>重要性</th>
+        <th>发布时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in records %}
+      <tr>
+        <td><a href="/admin/news/{{ record.news.id }}">{{ record.news.title[:80] }}{% if record.news.title|length > 80 %}...{% endif %}</a></td>
+        <td><span class="tag tag-pending">{{ record.news.source }}</span></td>
+        <td>{{ record.analysis.category if record.analysis else record.event.event_type }}</td>
+        <td class="stars">{{ '★' * (record.event.importance or 0) }}</td>
+        <td class="time-text">{{ record.news.published_at.strftime('%m-%d %H:%M') }}</td>
+        <td><a href="/admin/news/{{ record.news.id }}" class="btn btn-outline" style="padding: 2px 10px; font-size: 12px;">详情</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">📰</div><p>暂无新闻</p></div>
+  {% endif %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="/admin/news?page={{ page - 1 }}&page_size={{ page_size }}&importance={{ importance or '' }}&category={{ category or '' }}">‹ 上一页</a>
+  {% endif %}
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}
+    <span class="current">{{ p }}</span>
+    {% elif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+    <a href="/admin/news?page={{ p }}&page_size={{ page_size }}&importance={{ importance or '' }}&category={{ category or '' }}">{{ p }}</a>
+    {% elif p == page - 3 or p == page + 3 %}
+    <span>...</span>
+    {% endif %}
+  {% endfor %}
+  {% if page < total_pages %}
+  <a href="/admin/news?page={{ page + 1 }}&page_size={{ page_size }}&importance={{ importance or '' }}&category={{ category or '' }}">下一页 ›</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
