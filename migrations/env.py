@@ -6,10 +6,12 @@ config = context.config
 
 database_url = os.getenv("DATABASE_URL")
 if database_url:
-    config.set_main_option(
-        "sqlalchemy.url",
-        database_url.replace("postgresql+asyncpg://", "postgresql+psycopg://", 1),
-    )
+    # Handle both postgresql:// and postgresql+asyncpg:// formats
+    if "+" in database_url:
+        url = database_url.replace("+asyncpg://", "+psycopg://", 1)
+    else:
+        url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    config.set_main_option("sqlalchemy.url", url)
 
 
 def run_migrations_offline() -> None:
