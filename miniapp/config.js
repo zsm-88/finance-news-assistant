@@ -1,7 +1,7 @@
 const API_BASE_URLS = {
-  develop: 'http://192.168.0.109:8000',
-  trial: 'https://api.example.com',
-  release: 'https://api.example.com'
+  develop: 'https://finance-news-assistant-production.up.railway.app',
+  trial: 'https://finance-news-assistant-production.up.railway.app',
+  release: 'https://finance-news-assistant-production.up.railway.app'
 }
 
 function getEnvironment() {
