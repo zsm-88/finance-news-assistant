@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from pathlib import Path
 
 from app.config import get_settings
+from app.runtime import run_cycle
 from app.db.repositories import (
     AIReviewQueueRepository,
     AnalysisRepository,
@@ -275,3 +276,27 @@ async def config_view(
             "recent_audits": recent_audits,
         },
     )
+
+
+@router.post("/trigger-collect", include_in_schema=False)
+async def trigger_collect(request: Request):
+    \"\"\"Manually trigger a news collection + AI analysis + push cycle.\"\"\"
+    import asyncio
+    import logging
+
+    logger = logging.getLogger(__name__)
+    settings = get_settings()
+    infrastructure: Infrastructure = request.app.state.infrastructure
+
+    # Run collection in background to avoid HTTP timeout
+    async def _run() -> None:
+        try:
+            async with infrastructure.session_factory() as session:
+                count = await run_cycle(session, infrastructure.redis, settings)
+            logger.info("manual collection completed", extra={"news_count": count})
+        except Exception:
+            logger.exception("manual collection failed")
+
+    asyncio.ensure_future(_run())
+
+    return {"status": "accepted", "message": "Collection cycle started in background"}
