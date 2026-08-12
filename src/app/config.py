@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     cls_rss_url: str = "https://www.cls.cn/telegraph"
     enable_stcn: bool = True
     stcn_rss_url: str = "https://rsshub.app/finance/stcn/finance"
-    enable_wallstreetcn: bool = True
+    enable_wallstreetcn: bool = False
     wallstreetcn_rss_url: str = "https://rsshub.app/wallstreetcn/news/global"
     rss_request_timeout_seconds: int = 30
     enable_jin10: bool = False
