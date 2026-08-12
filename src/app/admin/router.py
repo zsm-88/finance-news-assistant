@@ -280,7 +280,7 @@ async def config_view(
 
 @router.post("/trigger-collect", include_in_schema=False)
 async def trigger_collect(request: Request):
-    \"\"\"Manually trigger a news collection + AI analysis + push cycle.\"\"\"
+    """Manually trigger a news collection + AI analysis + push cycle."""
     import asyncio
     import logging
 
